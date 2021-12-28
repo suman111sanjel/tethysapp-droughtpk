@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<StyledLayerDescriptor version="1.1.0" xsi:schemaLocation="http://www.opengis.net/sldStyledLayerDescriptor.xsd"
+                       xmlns="http://www.opengis.net/sld" xmlns:ogc="http://www.opengis.net/ogc"
+                       xmlns:se="http://www.opengis.net/se" xmlns:xlink="http://www.w3.org/1999/xlink"
+                       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <NamedLayer>
+        <se:Name>SWE_inst</se:Name>
+        <UserStyle>
+            <se:Name>Thesholded colour scheme</se:Name>
+            <se:CoverageStyle>
+                <se:Rule>
+                    <se:RasterSymbolizer>
+                        <se:Opacity>1.0</se:Opacity>
+                        <se:ColorMap>
+                            <se:Categorize fallbackValue="#00000000">
+                                <se:LookupValue>Rasterdata</se:LookupValue>
+                                <se:Value>#7E0000</se:Value>
+                                <se:Threshold>-50</se:Threshold>
+                                <se:Value>#BF0000</se:Value>
+                                <se:Threshold>-45</se:Threshold>
+                                <se:Value>#F70000</se:Value>
+                                <se:Threshold>-40</se:Threshold>
+                                <se:Value>#FF0200</se:Value>
+                                <se:Threshold>-35</se:Threshold>
+                                <se:Value>#FF1A00</se:Value>
+                                <se:Threshold>-30</se:Threshold>
+                                <se:Value>#FF5E00</se:Value>
+                                <se:Threshold>-25</se:Threshold>
+                                <se:Value>#FFA700</se:Value>
+                                <se:Threshold>-20</se:Threshold>
+                                <se:Value>#EDD128</se:Value>
+                                <se:Threshold>-15</se:Threshold>
+                                <se:Value>#E9DB7E</se:Value>
+                                <se:Threshold>-10</se:Threshold>
+                                <se:Value>#FCD5D8</se:Value>
+                                <se:Threshold>-5</se:Threshold>
+                                <se:Value>#FFFFFF</se:Value>
+                                <se:Threshold>0</se:Threshold>
+                                <se:Value>#FFFFFF</se:Value>
+                                <se:Threshold>5</se:Threshold>
+                                <se:Value>#E0FFF8</se:Value>
+                                <se:Threshold>10</se:Threshold>
+                                <se:Value>#99FFE5</se:Value>
+                                <se:Threshold>15</se:Threshold>
+                                <se:Value>#7CFFDD</se:Value>
+                                <se:Threshold>20</se:Threshold>
+                                <se:Value>#5EFFFF</se:Value>
+                                <se:Threshold>25</se:Threshold>
+                                <se:Value>#305EFF</se:Value>
+                                <se:Threshold>30</se:Threshold>
+                                <se:Value>#203AFF</se:Value>
+                                <se:Threshold>35</se:Threshold>
+                                <se:Value>#1A30FF</se:Value>
+                                <se:Threshold>40</se:Threshold>
+                                <se:Value>#0C16FF</se:Value>
+                                <se:Threshold>45</se:Threshold>
+                                <se:Value>#0004CB</se:Value>
+                            </se:Categorize>
+                        </se:ColorMap>
+                    </se:RasterSymbolizer>
+                </se:Rule>
+            </se:CoverageStyle>
+        </UserStyle>
+    </NamedLayer>
+</StyledLayerDescriptor>
