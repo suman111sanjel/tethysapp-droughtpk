@@ -634,6 +634,56 @@ let addLayerToMap = function (id, title, currentMonthWMS, SLD, showlegend, showC
     }, (error) => console.error(error));
 }
 
+function getURLParameters() {
+    var vars = {};
+
+    window.location.href.split('#')[0].replace(/[?&]+([^=&]+)=([^&]*)/gi,
+        function (m, key, value) {
+            vars[key] = value;
+        });
+    return vars;
+}
+
+
+function updateURLParameter(url, param, paramVal) {
+    var TheAnchor = null;
+    var newAdditionalURL = "";
+    var tempArray = url.split("?");
+    var baseURL = tempArray[0];
+    var additionalURL = tempArray[1];
+    var temp = "";
+    let tmpAnchor = '';
+    let TheParams = '';
+    if (additionalURL) {
+        tmpAnchor = additionalURL.split("#");
+        TheParams = tmpAnchor[0];
+        TheAnchor = tmpAnchor[1];
+        if (TheAnchor)
+            additionalURL = TheParams;
+
+        tempArray = additionalURL.split("&");
+
+        for (var i = 0; i < tempArray.length; i++) {
+            if (tempArray[i].split('=')[0] != param) {
+                newAdditionalURL += temp + tempArray[i];
+                temp = "&";
+            }
+        }
+    } else {
+        tmpAnchor = baseURL.split("#");
+        TheParams = tmpAnchor[0];
+        TheAnchor = tmpAnchor[1];
+
+        if (TheParams)
+            baseURL = TheParams;
+    }
+
+    if (TheAnchor)
+        paramVal += "#" + TheAnchor;
+
+    var rows_txt = temp + "" + param + "=" + paramVal;
+    return baseURL + "?" + newAdditionalURL + rows_txt;
+}
 //helper function for aggregating data over mapping
 
 var VALUESCALE = {
@@ -658,7 +708,7 @@ var VALUESCALE = {
     'rainfallAggregate': function (data) {
         return app._getAggregated('aggregate_rain', data);
     }
-}
+};
 
 var INDICES = [
     ["tempExtreme", "Temperature (min, max)"],
@@ -672,7 +722,7 @@ var INDICES = [
     ["seasonAgg", "Aggregated Anomalies"],
     ["pNormal", "Percentage of Normal"]
     // ["spi-1To1","Area Under SPI (-1 to 1)"]
-]
+];
 
 //
 // var TOOLTIPS = {
