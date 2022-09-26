@@ -1,6 +1,6 @@
 let app = {};
-let ChartAPIXMLHttpRequest=[];
-let initialChartRequest=true;
+let ChartAPIXMLHttpRequest = [];
+let initialChartRequest = true;
 app.InlineRadio = function (ID, name, InnerText, checked, LayerId) {
     let OuterDiv = app.createDiv('custom-control custom-radio custom-control-inline')
 
@@ -684,7 +684,22 @@ function updateURLParameter(url, param, paramVal) {
     var rows_txt = temp + "" + param + "=" + paramVal;
     return baseURL + "?" + newAdditionalURL + rows_txt;
 }
+
 //helper function for aggregating data over mapping
+
+
+function hideHeaderStyle() {
+
+    let a = document.querySelector('.navbar.navbar-light.template-nabar');
+    a.style.display='none';
+    let b = document.querySelector('.nav.nav-tabs');
+    b.style.display='none';
+    let c = document.querySelector('.all-container');
+    c.style.height='100%';
+    let d = document.querySelector('#myTabContent');
+    d.style.height='100%';
+
+}
 
 var VALUESCALE = {
     //'temp': function (x) {
@@ -693,8 +708,7 @@ var VALUESCALE = {
     'temp': function (x) {
         if (x > 100) {
             return x - 273;
-        }
-        else {
+        } else {
             return x
         }
         // return x - 273;

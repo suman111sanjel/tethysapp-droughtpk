@@ -56,64 +56,49 @@ app.createConstants = function () {
 }
 
 app.parseParameters = function () {
-    function getParam(name) {
-        var results = new RegExp('[\?&]' + name + '=([^&#]*)').exec(window.location.href);
-        if (results == null) {
-            return null;
-        } else {
-            return decodeURI(results[1]) || 0;
-        }
-    }
-
     app.baseURL = document.location.href.split('?')[0];
     app.URLparams = {};
-    // app.URLparams['c'] = getParam('c');
-    app.URLparams['d'] = getParam('d');
-    // app.URLparams['sd'] = getParam('sd');
-    // app.URLparams['ed'] = getParam('ed');
-    app.URLparams['p'] = getParam('p');
-    app.URLparams['i'] = getParam('i');
+    let parameters = getURLParameters();
+    app.URLparams['d'] = parameters['d'];
+    app.URLparams['p'] = parameters['p'];
+    app.URLparams['i'] = parameters['i'];
     var today = new Date();
     var month = today.getMonth();
     var year = app.DEFAULTS.YEAR;
-    // if month is not december, start from last year
-    // if (month < 12) year--;
     app.URLparams['y'] = year.toString();//app.DEFAULTS.YEAR;
     let flagChangeURL = false;
     let url = document.location.href;
 
+    let hideHeader = parameters['hideHeader'];
+
+    try {
+        hideHeader = eval(hideHeader);
+        console.log(hideHeader);
+    } catch (err) {
+        console.log('');
+    }
+    if (hideHeader == 1) {
+        console.log(hideHeader);
+        hideHeaderStyle()
+    }
+
     // redirect to jumla district if none is selected
     if (!app.URLparams['d']) {
-        let ddist = app.DEFAULTS.AdminLevel;
-        if (url.includes('?')) {
-            url = url + "&d=" + ddist;
-        } else {
-            url = url + "?d=" + ddist;
-        }
-        app.URLparams['d'] = ddist;
-        flagChangeURL = true;
+        let newURL = updateURLParameter(window.location.href, 'd', app.DEFAULTS.AdminLevel);
+        window.history.replaceState({}, 'droughtpk', newURL);
+        app.URLparams['d'] = app.DEFAULTS.AdminLevel
     }
     if (!app.URLparams['p']) {
-        let defaultPeriod = app.DEFAULTS.PERIOD;
-        if (url.includes('?')) {
-            url = url + "&p=" + defaultPeriod;
-        } else {
-            url = url + "?p=" + defaultPeriod;
-        }
-        app.URLparams['p'] = defaultPeriod;
-        flagChangeURL = true;
+        let newURL = updateURLParameter(window.location.href, 'p', app.DEFAULTS.PERIOD);
+        window.history.replaceState({}, 'droughtpk', newURL);
+        app.URLparams['p'] = app.DEFAULTS.PERIOD
     }
     if (!app.URLparams['i']) {
-        let defaultIndices = app.DEFAULTS.INDICES;
-        if (url.includes('?')) {
-            url = url + "&i=" + defaultIndices;
-        } else {
-            url = url + "?i=" + defaultIndices;
-        }
-        app.URLparams['i'] = defaultIndices;
-        flagChangeURL = true;
+        let newURL = updateURLParameter(window.location.href, 'i', app.DEFAULTS.INDICES);
+        window.history.replaceState({}, 'droughtpk', newURL);
+        app.URLparams['i'] = app.DEFAULTS.INDICES;
     }
-    if (flagChangeURL) window.history.replaceState({}, 'Nepal', url);
+
     // activate static options based on URL
     // for periodicity option
 
@@ -236,8 +221,6 @@ app.createHelpers = function () {
 
         }
     }
-
-
     app.changeDropdownForLayers = function () {
         let CurrentPeriodicity = app.URLparams.p;
         let selectlayers = document.querySelectorAll('.selectlayers');
@@ -331,6 +314,7 @@ app.createHelpers = function () {
     app.updateURL = function () {
         var geom = app.URLparams['d'];
         let period = $("input[name=periodicity]:checked").val();
+
         let selectedIndices = [
             $("#selectindex1").val(),
             $("#selectindex2").val(),
@@ -347,8 +331,14 @@ app.createHelpers = function () {
             "?d=" + geom +
             "&p=" + period +
             "&i=" + indices;
-        if (document.location.href != url) window.history.pushState({}, countryName, url);
-        else window.history.replaceState({}, countryName, url);
+        let newURL = updateURLParameter(window.location.href, 'd', geom);
+        newURL = updateURLParameter(newURL, 'p', period);
+        newURL = updateURLParameter(newURL, 'i', indices);
+
+        window.history.replaceState({}, '', newURL)
+
+        // if (document.location.href != url) window.history.pushState({}, countryName, url);
+        // else window.history.replaceState({}, countryName, url);
     }
 
     app.flyTo = function (location, zi, zf, done) {

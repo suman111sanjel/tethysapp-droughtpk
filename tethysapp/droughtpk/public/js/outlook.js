@@ -51,45 +51,42 @@ app.createConstants = function () {
 }
 
 app.parseParameters = function () {
-    function getParam(name) {
-        var results = new RegExp('[\?&]' + name + '=([^&#]*)').exec(window.location.href);
-        if (results == null) {
-            return null;
-        } else {
-            return decodeURI(results[1]) || 0;
-        }
-    }
-
     app.baseURL = document.location.href.split('?')[0];
     app.URLparams = {};
-    app.URLparams['d'] = getParam('d');
-    app.URLparams['e'] = getParam('e');
+    let parameters = getURLParameters();
+
+    app.URLparams['d'] = parameters['d'];
+    app.URLparams['e'] = parameters['e'];
+
     let flagChangeURL = false;
     let url = document.location.href;
 
-    // redirect to jumla district if none is selected
-    if (!app.URLparams['d']) {
-        let ddist = app.DEFAULTS.AdminLevel;
-        if (url.includes('?')) {
-            url = url + "&d=" + ddist;
-        } else {
-            url = url + "?d=" + ddist;
-        }
-        app.URLparams['d'] = ddist;
-        flagChangeURL = true;
+    let hideHeader = parameters['hideHeader'];
+
+    try {
+        hideHeader = eval(hideHeader);
+        console.log(hideHeader);
+    } catch (err) {
+        console.log('');
     }
-    if (!app.URLparams['e']) {
-        let defaultPeriod = app.DEFAULTS.ENSEMBLE;
-        if (url.includes('?')) {
-            url = url + "&e=" + defaultPeriod;
-        } else {
-            url = url + "?e=" + defaultPeriod;
-        }
-        app.URLparams['e'] = defaultPeriod;
-        flagChangeURL = true;
+    if (hideHeader == 1) {
+        console.log(hideHeader);
+        hideHeaderStyle()
     }
 
-    if (flagChangeURL) window.history.replaceState({}, 'Nepal', url);
+
+    // redirect to jumla district if none is selected
+    if (!app.URLparams['d']) {
+        let newURL = updateURLParameter(window.location.href, 'd', app.DEFAULTS.AdminLevel);
+        window.history.replaceState({}, '', newURL);
+        app.URLparams['d'] = app.DEFAULTS.AdminLevel;
+    }
+    if (!app.URLparams['e']) {
+        let newURL = updateURLParameter(window.location.href, 'e', app.DEFAULTS.ENSEMBLE);
+        window.history.replaceState({}, '', newURL);
+        app.URLparams['d'] = app.DEFAULTS.ENSEMBLE;
+    }
+
 
     // activate static options based on URL
     // for periodicity option
@@ -244,16 +241,19 @@ app.createHelpers = function () {
     // update the URL of application based on options
     app.updateURL = function () {
         var geom = app.URLparams['d'];
+
         // let period = $("#selectdataset").val();
         let selectedEn = $("#selecten").val();
+
         // let indices = $("#selectindices").val().join(',');
         app.URLparams = {
             'd': geom,
             'e': selectedEn,
         }
-        let url = app.baseURL + "?d=" + geom + "&e=" + selectedEn;
-        if (document.location.href != url) window.history.pushState({}, 'Nepal', url);
-        else window.history.replaceState({}, 'Nepal', url);
+
+        let newURL = updateURLParameter(window.location.href, 'd', geom);
+        newURL = updateURLParameter(newURL, 'e', selectedEn);
+        window.history.replaceState({}, '', newURL)
     }
 
     app.flyTo = function (location, zi, zf, done) {
@@ -618,14 +618,14 @@ app.initiUI = function () {
 
 app.computeFunctions = async function () {
     let variables = ['Tair_f_tavg', 'Rainf_f_tavg', 'SoilMoist_inst', 'Evap_tavg'];
-    let kk=0;
+    let kk = 0;
     for (i in variables) {
         app.ShowLoadingOnUI(kk);
         let param = app.APIParameters(variables[kk]);
         let response = await app.makeRequest('GET', app.API.TSAPI + '?params=' + JSON.stringify(param));
         let ParseResponse = JSON.parse(response);
         newBoxWhiskerPlot(ParseResponse, kk);
-        kk+=1;
+        kk += 1;
     }
 }
 
@@ -729,4 +729,3 @@ jQuery(async function ($) {
     app.loadOutlookLayers();
     app.bindControls();
 });
-
